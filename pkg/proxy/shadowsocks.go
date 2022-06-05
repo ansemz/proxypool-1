@@ -163,6 +163,9 @@ var (
 // GrepSSLinkFromString() remove web fuzz characters before a ss link
 func GrepSSLinkFromString(text string) []string {
 	results := make([]string, 0)
+	if !strings.Contains(text, "ss://") {
+		return results
+	}
 	texts := strings.Split(text, "ss://")
 	for _, text := range texts {
 		results = append(results, ssPlainRe.FindAllString("ss://"+text, -1)...)

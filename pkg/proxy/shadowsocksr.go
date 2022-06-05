@@ -100,8 +100,8 @@ func ParseSSRLink(link string) (*ShadowsocksR, error) {
 		return nil, ErrorMissingQuery
 	}
 
-	infoPayload := strings.SplitN(payload, "/?", 2)
-	if len(infoPayload) < 2 {
+	infoPayload := strings.SplitN(payload, "/?", -1)
+	if len(infoPayload) > 2 {
 		return nil, ErrorNotSSRLink
 	}
 	ssrpath := strings.Split(infoPayload[0], ":")
@@ -117,6 +117,26 @@ func ParseSSRLink(link string) (*ShadowsocksR, error) {
 	password, err := tool.Base64DecodeString(ssrpath[5])
 	if err != nil {
 		return nil, ErrorPasswordParseFail
+	}
+
+	if len(infoPayload) == 1 {
+		return &ShadowsocksR{
+			Base: Base{
+				Name:   "",
+				Server: server,
+				Port:   port,
+				Type:   "ssr",
+			},
+			Password:      password,
+			Cipher:        cipher,
+			Protocol:      protocol,
+			ProtocolParam: "",
+			Obfs:          obfs,
+			ObfsParam:     "",
+			Ot_enable:     0,
+			Ot_domain:     "",
+			Ot_path:       "",
+		}, nil
 	}
 
 	moreInfo, _ := url.ParseQuery(infoPayload[1])
@@ -208,6 +228,9 @@ var (
 
 func GrepSSRLinkFromString(text string) []string {
 	results := make([]string, 0)
+	if !strings.Contains(text, "ssr://") {
+		return results
+	}
 	texts := strings.Split(text, "ssr://")
 	for _, text := range texts {
 		results = append(results, ssrPlainRe.FindAllString("ssr://"+text, -1)...)
