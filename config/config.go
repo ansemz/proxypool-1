@@ -88,6 +88,10 @@ func Parse() error {
 	if Config.SpeedConnection <= 0 {
 		Config.SpeedConnection = 5
 	}
+	if Config.SpeedTimeout <= 0 {
+		Config.SpeedTimeout = 10
+	}
+
 	// set default
 	if Config.HealthCheckConnection <= 0 {
 		Config.HealthCheckConnection = 500

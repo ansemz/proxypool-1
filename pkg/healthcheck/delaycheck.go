@@ -84,7 +84,7 @@ func testDelay(p proxy.Proxy) (delay uint16, err error) {
 	if proxy.GoodNodeThatClashUnsupported(p) {
 		host := pmap["server"].(string)
 		port := fmt.Sprint(pmap["port"].(int))
-		if result, err := netConnectivity(host, port); result {
+		if _, err := netConnectivity(host, port); err == nil {
 			return 200, nil
 		} else {
 			return 0, err
@@ -135,14 +135,12 @@ func testDelay(p proxy.Proxy) (delay uint16, err error) {
 	}
 }
 
-func netConnectivity(host string, port string) (bool, error) {
-	result := false
+func netConnectivity(host string, port string) (string, error) {
+	result := ""
 	timeout := time.Second * 3
 	conn, err := net.DialTimeout("tcp", net.JoinHostPort(host, port), timeout)
-	if err == nil {
-		result = true
-	}
 	if conn != nil {
+		result, _, _ = net.SplitHostPort(conn.RemoteAddr().String())
 		defer conn.Close()
 	}
 	return result, err
