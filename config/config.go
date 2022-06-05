@@ -48,7 +48,11 @@ func (config ConfigOptions) HostUrl() string {
 	return url
 }
 
-func ConfigFilePath() string {
+func SetFilePath(path string) {
+	configFilePath = extractFullPath(path)
+}
+
+func FilePath() string {
 	return configFilePath
 }
 
@@ -69,10 +73,7 @@ func extractFullPath(path string) string {
 }
 
 // Parse 解析配置文件，支持本地文件系统和网络链接
-func Parse(path string) error {
-	if path != "" {
-		configFilePath = extractFullPath(path)
-	}
+func Parse() error {
 	fileData, err := ReadFile(configFilePath)
 	if err != nil {
 		return err

@@ -5,6 +5,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 
+	"github.com/ssrlive/proxypool/config"
 	"github.com/ssrlive/proxypool/pkg/geoIp"
 
 	"github.com/ssrlive/proxypool/api"
@@ -39,7 +40,9 @@ func main() {
 		configFilePath = "config.yaml"
 	}
 
-	err := app.InitConfigAndGetters(configFilePath)
+	config.SetFilePath(configFilePath)
+
+	err := app.InitConfigAndGetters()
 	if err != nil {
 		log.Errorln("Configuration init error: %s", err.Error())
 		panic(err)
