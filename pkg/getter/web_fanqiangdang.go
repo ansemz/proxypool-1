@@ -2,13 +2,14 @@ package getter
 
 import (
 	"fmt"
-	"github.com/ssrlive/proxypool/log"
 	"strings"
 	"sync"
 
+	"github.com/ssrlive/proxypool/log"
+
+	"github.com/gocolly/colly"
 	"github.com/ssrlive/proxypool/pkg/proxy"
 	"github.com/ssrlive/proxypool/pkg/tool"
-	"github.com/gocolly/colly"
 )
 
 func init() {
@@ -82,7 +83,7 @@ func (w *WebFanqiangdang) Get() proxy.ProxyList {
 func (w *WebFanqiangdang) Get2ChanWG(pc chan proxy.Proxy, wg *sync.WaitGroup) {
 	defer wg.Done()
 	nodes := w.Get()
-	log.Infoln("STATISTIC: Fanqiangdang\tcount=%d\turl=%s\n", len(nodes), w.Url)
+	log.Infoln("STATISTIC: Fanqiangdang\tcount=%d\turl=%s", len(nodes), w.Url)
 	for _, node := range nodes {
 		pc <- node
 	}
@@ -90,7 +91,7 @@ func (w *WebFanqiangdang) Get2ChanWG(pc chan proxy.Proxy, wg *sync.WaitGroup) {
 
 func (w *WebFanqiangdang) Get2Chan(pc chan proxy.Proxy) {
 	nodes := w.Get()
-	log.Infoln("STATISTIC: Fanqiangdang\tcount=%d\turl=%s\n", len(nodes), w.Url)
+	log.Infoln("STATISTIC: Fanqiangdang\tcount=%d\turl=%s", len(nodes), w.Url)
 	for _, node := range nodes {
 		pc <- node
 	}
